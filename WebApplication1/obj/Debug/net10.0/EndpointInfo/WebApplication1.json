@@ -5,6 +5,44 @@
     "version": "1.0"
   },
   "paths": {
+    "/api/tasks": {
+      "get": {
+        "tags": [
+          "TaksItems"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TaksItem"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TaksItem"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TaksItem"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/Test": {
       "get": {
         "tags": [
@@ -123,6 +161,23 @@
         },
         "additionalProperties": false
       },
+      "TaksItem": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "isCompleted": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
       "WeatherForecast": {
         "type": "object",
         "properties": {
@@ -149,6 +204,9 @@
     }
   },
   "tags": [
+    {
+      "name": "TaksItems"
+    },
     {
       "name": "Test"
     },
