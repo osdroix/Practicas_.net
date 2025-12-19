@@ -3,12 +3,24 @@
   "WorkspaceRootPath": "C:\\Users\\LENOVO ULTRA 7\\Desktop\\oX\\WebApplication1\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{1139E486-A36B-6B58-4965-3753D45010A4}|WebApplication1\\WebApplication1.csproj|c:\\users\\lenovo ultra 7\\desktop\\ox\\webapplication1\\webapplication1\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1139E486-A36B-6B58-4965-3753D45010A4}|WebApplication1\\WebApplication1.csproj|solutionrelative:webapplication1\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{1139E486-A36B-6B58-4965-3753D45010A4}|WebApplication1\\WebApplication1.csproj|c:\\users\\lenovo ultra 7\\desktop\\ox\\webapplication1\\webapplication1\\dtos\\taskitemresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1139E486-A36B-6B58-4965-3753D45010A4}|WebApplication1\\WebApplication1.csproj|solutionrelative:webapplication1\\dtos\\taskitemresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1139E486-A36B-6B58-4965-3753D45010A4}|WebApplication1\\WebApplication1.csproj|c:\\users\\lenovo ultra 7\\desktop\\ox\\webapplication1\\webapplication1\\models\\taksitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1139E486-A36B-6B58-4965-3753D45010A4}|WebApplication1\\WebApplication1.csproj|solutionrelative:webapplication1\\models\\taksitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1139E486-A36B-6B58-4965-3753D45010A4}|WebApplication1\\WebApplication1.csproj|c:\\users\\lenovo ultra 7\\desktop\\ox\\webapplication1\\webapplication1\\controllers\\testcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1139E486-A36B-6B58-4965-3753D45010A4}|WebApplication1\\WebApplication1.csproj|solutionrelative:webapplication1\\controllers\\testcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{1139E486-A36B-6B58-4965-3753D45010A4}|WebApplication1\\WebApplication1.csproj|c:\\users\\lenovo ultra 7\\desktop\\ox\\webapplication1\\webapplication1\\controllers\\taksitemscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1139E486-A36B-6B58-4965-3753D45010A4}|WebApplication1\\WebApplication1.csproj|solutionrelative:webapplication1\\controllers\\taksitemscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{1139E486-A36B-6B58-4965-3753D45010A4}|WebApplication1\\WebApplication1.csproj|c:\\users\\lenovo ultra 7\\desktop\\ox\\webapplication1\\webapplication1\\dtos\\createtaskrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1139E486-A36B-6B58-4965-3753D45010A4}|WebApplication1\\WebApplication1.csproj|solutionrelative:webapplication1\\dtos\\createtaskrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{1139E486-A36B-6B58-4965-3753D45010A4}|WebApplication1\\WebApplication1.csproj|c:\\users\\lenovo ultra 7\\desktop\\ox\\webapplication1\\webapplication1\\migrations\\20251217161351_initialcreate.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -19,16 +31,12 @@
       "RelativeMoniker": "D:0:0:{1139E486-A36B-6B58-4965-3753D45010A4}|WebApplication1\\WebApplication1.csproj|solutionrelative:webapplication1\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{1139E486-A36B-6B58-4965-3753D45010A4}|WebApplication1\\WebApplication1.csproj|c:\\users\\lenovo ultra 7\\desktop\\ox\\webapplication1\\webapplication1\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{1139E486-A36B-6B58-4965-3753D45010A4}|WebApplication1\\WebApplication1.csproj|solutionrelative:webapplication1\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{1139E486-A36B-6B58-4965-3753D45010A4}|WebApplication1\\WebApplication1.csproj|c:\\users\\lenovo ultra 7\\desktop\\ox\\webapplication1\\webapplication1\\context\\dbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{1139E486-A36B-6B58-4965-3753D45010A4}|WebApplication1\\WebApplication1.csproj|solutionrelative:webapplication1\\context\\dbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{1139E486-A36B-6B58-4965-3753D45010A4}|WebApplication1\\WebApplication1.csproj|c:\\users\\lenovo ultra 7\\desktop\\ox\\webapplication1\\webapplication1\\models\\taksitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1139E486-A36B-6B58-4965-3753D45010A4}|WebApplication1\\WebApplication1.csproj|solutionrelative:webapplication1\\models\\taksitem.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{1139E486-A36B-6B58-4965-3753D45010A4}|WebApplication1\\WebApplication1.csproj|c:\\users\\lenovo ultra 7\\desktop\\ox\\webapplication1\\webapplication1\\controllers\\testcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{1139E486-A36B-6B58-4965-3753D45010A4}|WebApplication1\\WebApplication1.csproj|solutionrelative:webapplication1\\controllers\\testcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{1139E486-A36B-6B58-4965-3753D45010A4}|WebApplication1\\WebApplication1.csproj|c:\\users\\lenovo ultra 7\\desktop\\ox\\webapplication1\\webapplication1\\controllers\\weatherforecastcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -46,17 +54,43 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 4,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
+              "Title": "TaskItemResponse.cs",
+              "DocumentMoniker": "C:\\Users\\LENOVO ULTRA 7\\Desktop\\oX\\WebApplication1\\WebApplication1\\DTOs\\TaskItemResponse.cs",
+              "RelativeDocumentMoniker": "WebApplication1\\DTOs\\TaskItemResponse.cs",
+              "ToolTip": "C:\\Users\\LENOVO ULTRA 7\\Desktop\\oX\\WebApplication1\\WebApplication1\\DTOs\\TaskItemResponse.cs",
+              "RelativeToolTip": "WebApplication1\\DTOs\\TaskItemResponse.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAtAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-19T17:23:08.288Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "CreateTaskRequest.cs",
+              "DocumentMoniker": "C:\\Users\\LENOVO ULTRA 7\\Desktop\\oX\\WebApplication1\\WebApplication1\\DTOs\\CreateTaskRequest.cs",
+              "RelativeDocumentMoniker": "WebApplication1\\DTOs\\CreateTaskRequest.cs",
+              "ToolTip": "C:\\Users\\LENOVO ULTRA 7\\Desktop\\oX\\WebApplication1\\WebApplication1\\DTOs\\CreateTaskRequest.cs",
+              "RelativeToolTip": "WebApplication1\\DTOs\\CreateTaskRequest.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAA2AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-19T17:21:18.568Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
               "Title": "TaksItemsController.cs",
               "DocumentMoniker": "C:\\Users\\LENOVO ULTRA 7\\Desktop\\oX\\WebApplication1\\WebApplication1\\Controllers\\TaksItemsController.cs",
               "RelativeDocumentMoniker": "WebApplication1\\Controllers\\TaksItemsController.cs",
               "ToolTip": "C:\\Users\\LENOVO ULTRA 7\\Desktop\\oX\\WebApplication1\\WebApplication1\\Controllers\\TaksItemsController.cs",
               "RelativeToolTip": "WebApplication1\\Controllers\\TaksItemsController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAjAAAAAAAAAA==",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAABkAAAAaAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-12-17T16:39:34.56Z",
               "EditorCaption": ""
@@ -64,6 +98,32 @@
             {
               "$type": "Document",
               "DocumentIndex": 2,
+              "Title": "TestController.cs",
+              "DocumentMoniker": "C:\\Users\\LENOVO ULTRA 7\\Desktop\\oX\\WebApplication1\\WebApplication1\\Controllers\\TestController.cs",
+              "RelativeDocumentMoniker": "WebApplication1\\Controllers\\TestController.cs",
+              "ToolTip": "C:\\Users\\LENOVO ULTRA 7\\Desktop\\oX\\WebApplication1\\WebApplication1\\Controllers\\TestController.cs",
+              "RelativeToolTip": "WebApplication1\\Controllers\\TestController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAACwAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-16T15:53:24.644Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "TaksItem.cs",
+              "DocumentMoniker": "C:\\Users\\LENOVO ULTRA 7\\Desktop\\oX\\WebApplication1\\WebApplication1\\Models\\TaksItem.cs",
+              "RelativeDocumentMoniker": "WebApplication1\\Models\\TaksItem.cs",
+              "ToolTip": "C:\\Users\\LENOVO ULTRA 7\\Desktop\\oX\\WebApplication1\\WebApplication1\\Models\\TaksItem.cs",
+              "RelativeToolTip": "WebApplication1\\Models\\TaksItem.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-12-17T15:16:44.098Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
               "Title": "20251217161351_InitialCreate.cs",
               "DocumentMoniker": "C:\\Users\\LENOVO ULTRA 7\\Desktop\\oX\\WebApplication1\\WebApplication1\\Migrations\\20251217161351_InitialCreate.cs",
               "RelativeDocumentMoniker": "WebApplication1\\Migrations\\20251217161351_InitialCreate.cs",
@@ -76,7 +136,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 6,
               "Title": "appsettings.json",
               "DocumentMoniker": "C:\\Users\\LENOVO ULTRA 7\\Desktop\\oX\\WebApplication1\\WebApplication1\\appsettings.json",
               "RelativeDocumentMoniker": "WebApplication1\\appsettings.json",
@@ -89,20 +149,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "DBContext.cs",
-              "DocumentMoniker": "C:\\Users\\LENOVO ULTRA 7\\Desktop\\oX\\WebApplication1\\WebApplication1\\Context\\DBContext.cs",
-              "RelativeDocumentMoniker": "WebApplication1\\Context\\DBContext.cs",
-              "ToolTip": "C:\\Users\\LENOVO ULTRA 7\\Desktop\\oX\\WebApplication1\\WebApplication1\\Context\\DBContext.cs",
-              "RelativeToolTip": "WebApplication1\\Context\\DBContext.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-17T15:55:30.952Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 7,
               "Title": "Program.cs",
               "DocumentMoniker": "C:\\Users\\LENOVO ULTRA 7\\Desktop\\oX\\WebApplication1\\WebApplication1\\Program.cs",
               "RelativeDocumentMoniker": "WebApplication1\\Program.cs",
@@ -115,33 +162,20 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "TaksItem.cs",
-              "DocumentMoniker": "C:\\Users\\LENOVO ULTRA 7\\Desktop\\oX\\WebApplication1\\WebApplication1\\Models\\TaksItem.cs",
-              "RelativeDocumentMoniker": "WebApplication1\\Models\\TaksItem.cs",
-              "ToolTip": "C:\\Users\\LENOVO ULTRA 7\\Desktop\\oX\\WebApplication1\\WebApplication1\\Models\\TaksItem.cs",
-              "RelativeToolTip": "WebApplication1\\Models\\TaksItem.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAApAAAAAAAAAA==",
+              "DocumentIndex": 8,
+              "Title": "DBContext.cs",
+              "DocumentMoniker": "C:\\Users\\LENOVO ULTRA 7\\Desktop\\oX\\WebApplication1\\WebApplication1\\Context\\DBContext.cs",
+              "RelativeDocumentMoniker": "WebApplication1\\Context\\DBContext.cs",
+              "ToolTip": "C:\\Users\\LENOVO ULTRA 7\\Desktop\\oX\\WebApplication1\\WebApplication1\\Context\\DBContext.cs",
+              "RelativeToolTip": "WebApplication1\\Context\\DBContext.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-17T15:16:44.098Z",
+              "WhenOpened": "2025-12-17T15:55:30.952Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "TestController.cs",
-              "DocumentMoniker": "C:\\Users\\LENOVO ULTRA 7\\Desktop\\oX\\WebApplication1\\WebApplication1\\Controllers\\TestController.cs",
-              "RelativeDocumentMoniker": "WebApplication1\\Controllers\\TestController.cs",
-              "ToolTip": "C:\\Users\\LENOVO ULTRA 7\\Desktop\\oX\\WebApplication1\\WebApplication1\\Controllers\\TestController.cs",
-              "RelativeToolTip": "WebApplication1\\Controllers\\TestController.cs",
-              "ViewState": "AgIAACoAAAAAAAAAAAAAACwAAAANAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-16T15:53:24.644Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 9,
               "Title": "WeatherForecastController.cs",
               "DocumentMoniker": "C:\\Users\\LENOVO ULTRA 7\\Desktop\\oX\\WebApplication1\\WebApplication1\\Controllers\\WeatherForecastController.cs",
               "RelativeDocumentMoniker": "WebApplication1\\Controllers\\WeatherForecastController.cs",
@@ -149,12 +183,11 @@
               "RelativeToolTip": "WebApplication1\\Controllers\\WeatherForecastController.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAwAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-12-16T15:46:18.43Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-12-16T15:46:18.43Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 10,
               "Title": "launchSettings.json",
               "DocumentMoniker": "C:\\Users\\LENOVO ULTRA 7\\Desktop\\oX\\WebApplication1\\WebApplication1\\Properties\\launchSettings.json",
               "RelativeDocumentMoniker": "WebApplication1\\Properties\\launchSettings.json",
@@ -162,8 +195,7 @@
               "RelativeToolTip": "WebApplication1\\Properties\\launchSettings.json",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAgAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2025-12-16T15:33:59.835Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-12-16T15:33:59.835Z"
             }
           ]
         }
