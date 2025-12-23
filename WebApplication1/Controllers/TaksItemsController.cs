@@ -77,7 +77,53 @@ namespace TaskManagerAPI.Controllers
         }
         //Tolist
         //updete
+        [HttpPost]
+        [Route("update/{id}")]
+        public async Task<ActionResult<TaskItemResponse>> Update(int id, [FromBody] UpdateTaksRequest request)
+            // [FromBody] → Atributo que indica que este parámetro se obtiene del cuerpo de la solicitud 
+        {
+            if (request == null)
+                return BadRequest("Body requerido.");
+
+            if (string.IsNullOrWhiteSpace(request.Title))
+                return BadRequest("Title es requerido.");
+
+            var task = await _context.TaksItems.FindAsync(id);
+
+            if (task == null)
+                return NotFound();
+
+            // Modificar solo estos campos:
+            task.Title = request.Title.Trim();
+            // modificar el estado 
+            if (request.IsCompleted.HasValue)
+            {
+                task.IsCompleted = request.IsCompleted.Value;
+            }
+
+            await _context.SaveChangesAsync();
+
+            var dto = new TaskItemResponse
+            {
+                Id = task.Id,
+                Title = task.Title,
+                IsCompleted = (bool)task.IsCompleted
+            };
+
+            return Ok(dto);
+        }
         //delete se boloquean
+        [HttpDelete("{id:int}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var task = await _context.TaksItems.FindAsync(id);
+            if (task == null) return NotFound();
+
+            _context.TaksItems.Remove(task);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
     }
     /*los datos no son bueno que terminen expuestos directamente, Data Transfer Object,
      esto solo es para usar datos de forma directa y sin llamar todo el pull de estos.*/
