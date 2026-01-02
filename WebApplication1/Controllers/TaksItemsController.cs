@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
+using TaskManager.DTOs;
 using WebApplication1.DTOs;
 using WebApplication1.Models;
 
@@ -123,6 +124,46 @@ namespace TaskManagerAPI.Controllers
             await _context.SaveChangesAsync();
 
             return NoContent();
+        }
+        //
+        [HttpGet("search")]
+        public async Task<ActionResult<IEnumerable<TaskQueryResultDto>>> Search(
+            [FromQuery] SearchFilter request)
+        { 
+            var query = _context.TaksItems.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(request.text))
+                query = query.Where(t => t.Title.Contains(request.text));
+
+            if (request.completed.HasValue)
+                query = query.Where(t => t.IsCompleted == request.completed);
+
+            if (request.step.HasValue)
+                query = query.Where(t => t.Step == request.step);
+
+            query = request.orderBy switch
+            {
+                "title" => query.OrderBy(t => t.Title),
+                "title_desc" => query.OrderByDescending(t => t.Title),
+                "date" => query.OrderBy(t => t.CreatedAt),
+                "date_desc" => query.OrderByDescending(t => t.CreatedAt),
+                "step" => query.OrderBy(t => t.Step),
+                "step_desc" => query.OrderByDescending(t => t.Step),
+                _ => query.OrderBy(t => t.Id)
+            };
+
+            var results = await query
+                .Select(t => new TaskQueryResultDto
+                {
+                    Id = t.Id,
+                    Title = t.Title,
+                    IsCompleted = t.IsCompleted,
+                    Step = t.Step,
+                    CreatedAt = t.CreatedAt
+                })
+                .ToListAsync();
+
+            return Ok(results);
         }
     }
     /*los datos no son bueno que terminen expuestos directamente, Data Transfer Object,

@@ -1,13 +1,12 @@
-﻿namespace WebApplication1.Models
+﻿namespace WebApplication1.DTOs
 {
-    public class TaksItem
+    public class TaskQueryResultDto
     {
         public int Id { get; set; }
         public string Title { get; set; }
         public bool IsCompleted { get; set; }
         public int Step { get; set; }
-        //Este campo guardar los datos de auditoria.
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public DateTime CreatedAt { get; set; }
     }
 
 }
