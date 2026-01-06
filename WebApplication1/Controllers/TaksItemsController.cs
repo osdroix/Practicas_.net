@@ -165,6 +165,7 @@ namespace TaskManagerAPI.Controllers
 
             return Ok(results);
         }
+        [HttpGet("paged")] public async Task<ActionResult<IEnumerable<TaskQueryResultDto>>> GetPaged([FromQuery] int page = 1, [FromQuery] int pageSize = 10) { var query = _context.TaksItems.OrderBy(t => t.Id).Skip((page - 1) * pageSize).Take(pageSize); var result = await query.Select(t => new TaskQueryResultDto { Id = t.Id, Title = t.Title, IsCompleted = t.IsCompleted, Step = t.Step, CreatedAt = t.CreatedAt }).ToListAsync(); return Ok(result); }
     }
     /*los datos no son bueno que terminen expuestos directamente, Data Transfer Object,
      esto solo es para usar datos de forma directa y sin llamar todo el pull de estos.*/
