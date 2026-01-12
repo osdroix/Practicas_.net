@@ -58,10 +58,14 @@ namespace TaskManagerAPI.Controllers
             if (string.IsNullOrWhiteSpace(request.Title))
                 return BadRequest("Title es requerido.");
 
+            var categoryExists = await _context.Categories.AnyAsync(c => c.Id == request.CategoryId);
+            if (!categoryExists)
+                return BadRequest("CategoryId no existe.");
             var entity = new TaksItem
             {
                 Title = request.Title.Trim(),
-                IsCompleted = false
+                IsCompleted = false,
+                CategoryId = request.CategoryId,
             };
 
             _context.TaksItems.Add(entity);
@@ -166,6 +170,87 @@ namespace TaskManagerAPI.Controllers
             return Ok(results);
         }
         [HttpGet("paged")] public async Task<ActionResult<IEnumerable<TaskQueryResultDto>>> GetPaged([FromQuery] int page = 1, [FromQuery] int pageSize = 10) { var query = _context.TaksItems.OrderBy(t => t.Id).Skip((page - 1) * pageSize).Take(pageSize); var result = await query.Select(t => new TaskQueryResultDto { Id = t.Id, Title = t.Title, IsCompleted = t.IsCompleted, Step = t.Step, CreatedAt = t.CreatedAt }).ToListAsync(); return Ok(result); }
+        [HttpGet("with-category")]
+        public async Task<ActionResult<IEnumerable<TaskWithCategoryDto>>> GetWithCategory()
+        {
+            var result = await _context.TaksItems
+                .Include(t => t.Category)
+                .OrderBy(t => t.Id)
+                .Select(t => new TaskWithCategoryDto
+                {
+                    Id = t.Id,
+                    Title = t.Title,
+                    IsCompleted = t.IsCompleted,
+                    Step = t.Step,
+                    CreatedAt = t.CreatedAt,
+                    CategoryId = (int)t.CategoryId,
+                    CategoryName = t.Category.Name
+                })
+                .ToListAsync();
+
+            return Ok(result);
+        }
+        [HttpGet("advanced-search")]
+        public async Task<ActionResult<PagedResultDto<TaskWithCategoryDto>>> AdvancedSearch(
+    [FromQuery] string? text,
+    [FromQuery] bool? completed,
+    [FromQuery] int? step,
+    [FromQuery] string? categoryName,
+    [FromQuery] int? categoryId,
+    [FromQuery] int page = 1,
+    [FromQuery] int pageSize = 10
+)
+        {
+            var query = _context.TaksItems
+            .Include(t => t.Category)
+            .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(text))
+                query = query.Where(t => t.Title.Contains(text));
+
+            if (completed.HasValue)
+                query = query.Where(t => t.IsCompleted == completed);
+
+            if (step.HasValue)
+                query = query.Where(t => t.Step == step);
+
+            if (categoryId.HasValue)
+                query = query.Where(t => t.CategoryId == categoryId);
+            if (!string.IsNullOrWhiteSpace(categoryName))
+            {
+                var name = categoryName.Trim();
+                query = query.Where(t => t.Category.Name.Contains(name));
+            }
+            var totalCount = await query.CountAsync();
+
+            var items = await query
+                .OrderBy(t => t.Id)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Select(t => new TaskWithCategoryDto
+                {
+                    Id = t.Id,
+                    Title = t.Title,
+                    IsCompleted = t.IsCompleted,
+                    Step = t.Step,
+                    CreatedAt = t.CreatedAt,
+                    CategoryId = (int)t.CategoryId,
+                    CategoryName = t.Category.Name
+                })
+                .ToListAsync();
+
+            var result = new PagedResultDto<TaskWithCategoryDto>
+            {
+                Page = page,
+                PageSize = pageSize,
+                TotalCount = totalCount,
+                Items = items
+            };
+
+            return Ok(result);
+
+
+        }
     }
     /*los datos no son bueno que terminen expuestos directamente, Data Transfer Object,
      esto solo es para usar datos de forma directa y sin llamar todo el pull de estos.*/

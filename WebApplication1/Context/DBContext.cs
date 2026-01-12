@@ -9,5 +9,6 @@ using WebApplication1.Models;
     {
         }
         public DbSet<TaksItem> TaksItems { get; set; }
+        public DbSet<Category> Categories { get; set; }
 }
 
