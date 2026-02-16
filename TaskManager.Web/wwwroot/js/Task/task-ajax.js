@@ -5,7 +5,7 @@
     input.addEventListener("input", async () => {
         const text = input.value;
 
-        const url = '/api/tasks/ajax-search?text=${encodeURIComponent(text)}';
+        const url = `/api/tasks/ajax-search?text=${encodeURIComponent(text)}`;
 
     try {
         const response = await fetch(url);

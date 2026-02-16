@@ -1,53 +1,370 @@
-﻿@model TaskManager.Web.Models.PagedResultViewModel<TaskManager.Web.Models.TaskViewModel>
+@model TaskManager.Web.Models.TaskSearchViewModel
 
 @{
-    ViewData["Title"] = "Tareas";
+    ViewData["Title"] = "Gestión Integral de Tareas";
 }
 
-@* 1. Reemplazas los bloques @if de TempData por el partial *@
 <partial name="_AlertMessages" />
 
-<h1>
-    Tareas
-    <a asp-action="Create" class="btn btn-sm btn-primary">Agregar</a>
-</h1>
+@* 
+    ----------------------------------------------------------------------------------
+    Date: 2026-02-11
+    Author: [Usuario]
+    Description: Se implementó un sistema de navegación por pestañas (Tabs) para unificar
+    las vistas Index, Index1, Index2 y AjaxDemo en una sola interfaz coherente.
+    Esto permite acceder a diferentes modos de búsqueda sin cambiar de página.
+    ----------------------------------------------------------------------------------
+*@
 
-<p>Mostrando @Model.Items.Count() de @Model.TotalCount</p>
+<!-- Tab Navigation -->
+<ul class="nav nav-tabs mb-4" id="taskTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="general-tab" data-bs-toggle="tab" data-bs-target="#general" type="button" role="tab" aria-controls="general" aria-selected="true">Vista General</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="simple-search-tab" data-bs-toggle="tab" data-bs-target="#simple-search" type="button" role="tab" aria-controls="simple-search" aria-selected="false">Búsqueda Básica</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="advanced-search-tab" data-bs-toggle="tab" data-bs-target="#advanced-search" type="button" role="tab" aria-controls="advanced-search" aria-selected="false">Búsqueda Avanzada</button>
+    </li>
+    <li class="nav-item" role="presentation">
+        <button class="nav-link" id="ajax-demo-tab" data-bs-toggle="tab" data-bs-target="#ajax-demo" type="button" role="tab" aria-controls="ajax-demo" aria-selected="false">Búsqueda AJAX</button>
+    </li>
+</ul>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Id</th>
-            <th>Título</th>
-            <th>Categoría</th>
-            <th>Completada</th>
-            <th>Step</th>
-            <th>Actiones</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var t in Model.Items)
+<div class="tab-content" id="taskTabsContent">
+    
+    <!-- SECTION 1: Original Index Content (Adapted) -->
+    @* 
+        ----------------------------------------------------------------------------------
+        Date: 2026-02-11
+        Author: [Usuario]
+        Description: Contenido original de Index.cshtml encapsulado en el primer tab.
+        Mantiene la funcionalidad de listado simple y acciones CRUD.
+        ----------------------------------------------------------------------------------
+    *@
+    <div class="tab-pane fade show active" id="general" role="tabpanel" aria-labelledby="general-tab">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h1>Tareas</h1>
+            <a asp-action="Create" class="btn btn-sm btn-primary">Agregar Nueva Tarea</a>
+        </div>
+
+        @if (Model.Result != null && Model.Result.Items != null)
         {
-            <tr>
-                <td>@t.Id</td>
-                <td>@t.Title</td>
-                <td>@t.CategoryName</td>
-                <td>@(t.IsCompleted ? "Sí" : "No")</td>
-                <td>@t.Step</td>
-                <td>
-                    <a asp-controller="Tasks" asp-action="Details" asp-route-id="@t.Id" class="btn btn-sm btn-primary">
-                        Ver detalles
-                    </a>
-                    <a asp-action="Edit" asp-route-id="@t.Id" class="btn btn-sm btn-primary">Editar</a> 
-                    <form asp-action="Delete" method="post" class="d-inline">
-                        <input type="hidden" name="id" value="@t.Id" />
-                        <button type="submit" class="btn btn-danger btn-sm"
-                                onclick="return confirm('¿Estás seguro de que deseas eliminar esta tarea?');">
-                            Eliminar
-                        </button>
-                    </form>
-                </td>
-            </tr>
+            <p>Mostrando @Model.Result.Items.Count() de @Model.Result.TotalCount</p>
+
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Título</th>
+                        <th>Categoría</th>
+                        <th>Completada</th>
+                        <th>Step</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var t in Model.Result.Items)
+                    {
+                        <tr>
+                            <td>@t.Id</td>
+                            <td>@t.Title</td>
+                            <td>@t.CategoryName</td>
+                            <td>@(t.IsCompleted ? "Sí" : "No")</td>
+                            <td>@t.Step</td>
+                            <td>
+                                <a asp-controller="Tasks" asp-action="Details" asp-route-id="@t.Id" class="btn btn-sm btn-primary">
+                                    Ver detalles
+                                </a>
+                                <a asp-action="Edit" asp-route-id="@t.Id" class="btn btn-sm btn-primary">Editar</a> 
+                                <form asp-action="Delete" method="post" class="d-inline">
+                                    <input type="hidden" name="id" value="@t.Id" />
+                                    <button type="submit" class="btn btn-danger btn-sm"
+                                            onclick="return confirm('¿Estás seguro de que deseas eliminar esta tarea?');">
+                                        Eliminar
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         }
-    </tbody>
-</table>
+    </div>
+
+    <!-- SECTION 2: Index1 Content (Integrated) -->
+    @* 
+        ----------------------------------------------------------------------------------
+        Date: 2026-02-11
+        Author: [Usuario]
+        Description: Integración del contenido de Index1.cshtml.
+        Se modificaron los IDs de los inputs (agregando sufijo '_simple') para evitar conflictos con otros tabs.
+        ----------------------------------------------------------------------------------
+    *@
+    <div class="tab-pane fade" id="simple-search" role="tabpanel" aria-labelledby="simple-search-tab">
+        <h3>Búsqueda Básica</h3>
+        <form asp-action="Index" method="get" class="mb-4">
+            <!-- Hidden inputs to maintain state of other tabs if needed, but here we perform a fresh search -->
+            <input type="hidden" name="tab" value="simple-search" />
+
+            <div class="row">
+                <div class="col-3">
+                    <label for="text_simple">Texto</label>
+                    <input type="text" id="text_simple" class="form-control" name="Text" value="@Model?.Text" />
+                </div>
+
+                <div class="col-3">
+                    <label for="cat_simple">Categoría</label>
+                    <input type="text" id="cat_simple" class="form-control" name="CategoryName" value="@Model?.CategoryName" />
+                </div>
+
+                <div class="col-2">
+                    <label for="comp_simple">Completado</label>
+                    <select name="IsCompleted" id="comp_simple" class="form-control">
+                        <option value="">--Todos--</option>
+                        <option value="true" selected="@(Model?.IsCompleted == true)">Sí</option>
+                        <option value="false" selected="@(Model?.IsCompleted == false)">No</option>
+                    </select>
+                </div>
+
+                <div class="col-2">
+                    <label for="step_simple">Step</label>
+                    <input type="number" id="step_simple" class="form-control" name="Step" value="@Model?.Step" />
+                </div>
+
+                <div class="col-2 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary w-100">Buscar</button>
+                </div>
+            </div>
+        </form>
+
+        @if (Model?.Result?.Items == null || !Model.Result.Items.Any())
+        {
+            <p>No se encontraron resultados.</p>
+        }
+        else
+        {
+            <p>Mostrando @Model.Result.Items.Count() de @Model.Result.TotalCount resultados.</p>
+
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Título</th>
+                        <th>Categoría</th>
+                        <th>Completado</th>
+                        <th>Step</th>
+                        <th>Fecha</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var t in Model.Result.Items)
+                    {
+                        <tr>
+                            <td>@t.Title</td>
+                            <td>@t.CategoryName</td>
+                            <td>@(t.IsCompleted ? "Sí" : "No")</td>
+                            <td>@t.Step</td>
+                            <td>@t.CreatedAt.ToString("dd/MM/yyyy HH:mm")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+
+    <!-- SECTION 3: Index2 Content (Integrated) -->
+    @* 
+        ----------------------------------------------------------------------------------
+        Date: 2026-02-11
+        Author: [Usuario]
+        Description: Integración del contenido de Index2.cshtml.
+        Se modificaron los IDs de los inputs (agregando sufijo '_Adv') para evitar conflictos.
+        Incluye paginación completa.
+        ----------------------------------------------------------------------------------
+    *@
+    <div class="tab-pane fade" id="advanced-search" role="tabpanel" aria-labelledby="advanced-search-tab">
+        <h3>Búsqueda Avanzada</h3>
+        
+        <form asp-action="Index" method="get" class="row g-3 mb-4">
+             <input type="hidden" name="tab" value="advanced-search" />
+
+            <div class="col-md-3">
+                <label class="form-label" for="Text_Adv">Texto</label>
+                <input name="Text" value="@Model.Text" class="form-control" id="Text_Adv" />
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label" for="CategoryId_Adv">Categoría (Id)</label>
+                <input name="CategoryId" value="@Model.CategoryId" class="form-control" type="number" id="CategoryId_Adv" />
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label" for="CategoryName_Adv">Nombre de Categoría</label>
+                <input name="CategoryName" value="@Model.CategoryName" class="form-control" id="CategoryName_Adv" />
+            </div>
+
+            <div class="col-md-2">
+                <label class="form-label" for="Step_Adv">Step</label>
+                <input name="Step" value="@Model.Step" class="form-control" type="number" id="Step_Adv" />
+            </div>
+
+            <div class="col-md-2">
+                <label class="form-label" for="IsCompleted_Adv">Estado</label>
+                <select name="IsCompleted" class="form-select" id="IsCompleted_Adv">
+                    <option value="">-- todos --</option>
+                    <option value="true" selected="@(Model.IsCompleted == true)">Completadas</option>
+                    <option value="false" selected="@(Model.IsCompleted == false)">Pendientes</option>
+                </select>
+            </div>
+
+            <div class="col-md-12 mt-3">
+                <button type="submit" class="btn btn-primary">Buscar</button>
+                <a asp-action="Index" class="btn btn-secondary">Limpiar</a>
+            </div>
+
+        </form>
+
+        @if (Model.Result != null && Model.Result.Items.Any())
+        {
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Título</th>
+                        <th>Categoría</th>
+                        <th>Step</th>
+                        <th>Completada</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Result.Items)
+                    {
+                        <tr>
+                            <td>@item.Title</td>
+                            <td>@item.CategoryName</td>
+                            <td>@item.Step</td>
+                            <td>@(item.IsCompleted ? "Sí" : "No")</td>
+                            <td>
+                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info">Ver</a>
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Editar</a>
+                                <form asp-action="Delete" method="post" class="d-inline">
+                                    <input type="hidden" name="id" value="@item.Id" />
+                                    <button class="btn btn-sm btn-danger">Eliminar</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>No se encontraron resultados.</p>
+        }
+        
+        @if (Model.Result != null && Model.Result.TotalCount > 1)
+        {
+            <nav>
+                <ul class="pagination">
+                    @for (int i = 1; i <= Model.Result.TotalCount; i++)
+                    {
+                        <li class="page-item @(i == Model.Page ? "active" : "")">
+                            <a class="page-link"
+                               asp-action="Index"
+                               asp-route-Page="@i"
+                               asp-route-Text="@Model.Text"
+                               asp-route-CategoryId="@Model.CategoryId"
+                               asp-route-CategoryName="@Model.CategoryName"
+                               asp-route-Step="@Model.Step"
+                               asp-route-IsCompleted="@Model.IsCompleted"
+                               asp-route-tab="advanced-search">
+                                @i
+                            </a>
+                        </li>
+                    }
+                </ul>
+            </nav>
+        }
+    </div>
+    <!-- SECTION 4: Ajax Demo Content (Integrated) -->
+    @* 
+        ----------------------------------------------------------------------------------
+        Date: 2026-02-11
+        Author: [Usuario]
+        Description: Integración del contenido de AjaxDemo.cshtml.
+        Permite búsquedas asíncronas sin recargar la página.
+        ----------------------------------------------------------------------------------
+    *@
+    <div class="tab-pane fade" id="ajax-demo" role="tabpanel" aria-labelledby="ajax-demo-tab">
+        <h3>Búsqueda Rápida (AJAX)</h3>
+        
+        <div class="mb-3">
+            <label class="form-label" for="searchAjax">Buscar por texto:</label>
+            <input id="searchAjax" class="form-control" placeholder="Escribe para buscar..." />
+        </div>
+
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Título</th>
+                    <th>Categoría</th>
+                    <th>Step</th>
+                    <th>Completada</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="ajaxResults">
+                <!-- Results will be populated by JS -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/Task/task-ajax.js"></script>
+    <script>
+        // ----------------------------------------------------------------------------------
+        // Date: 2026-02-11
+        // Author: [Usuario]
+        // Description: Script para manejar la persistencia de la pestaña activa.
+        // Utiliza parámetros URL y localStorage para recordar la selección del usuario.
+        // ----------------------------------------------------------------------------------
+        document.addEventListener("DOMContentLoaded", function () {
+            // Function to get URL parameter
+            function getUrlParameter(name) {
+                name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+                var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+                var results = regex.exec(location.search);
+                return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+            }
+
+            // Check for 'tab' parameter in URL
+            var activeTab = getUrlParameter('tab');
+            if (activeTab) {
+                var triggerEl = document.querySelector('#taskTabs button[data-bs-target="#' + activeTab + '"]');
+                if (triggerEl) {
+                    var tab = new bootstrap.Tab(triggerEl);
+                    tab.show();
+                }
+            } else {
+                // Restore from localStorage if no URL param
+                var lastTab = localStorage.getItem('activeTaskTab');
+                if (lastTab) {
+                     var triggerEl = document.querySelector('#taskTabs button[data-bs-target="' + lastTab + '"]');
+                     if (triggerEl) {
+                         var tab = new bootstrap.Tab(triggerEl);
+                         tab.show();
+                     }
+                }
+            }
+
+            // Save active tab to localStorage on click
+            var tabEl = document.getElementById('taskTabs');
+            tabEl.addEventListener('shown.bs.tab', function (event) {
+                var targetId = event.target.getAttribute('data-bs-target');
+                localStorage.setItem('activeTaskTab', targetId);
+            });
+        });
+    </script>
+}

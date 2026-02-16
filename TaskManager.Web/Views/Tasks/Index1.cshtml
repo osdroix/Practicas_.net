@@ -1,74 +1,46 @@
 ﻿@model TaskManager.Web.Models.TaskSearchViewModel
 
-@{
-    ViewData["Title"] = "Tareas";
-}
+<h1>Listado de Tareas</h1>
 
-<h1>Tareas</h1>
+<form id="filterForm" class="row g-3 mb-3">
+    <div class="col-md-3">
+        <label class="form-label">Texto</label>
+        <input asp-for="Text" class="form-control" />
+    </div>
 
-<form asp-action="Search" method="get" class="mb-4">
+    <div class="col-md-2">
+        <label class="form-label">Categoría ID</label>
+        <input asp-for="CategoryId" class="form-control" />
+    </div>
 
-    <div class="row">
-        <div class="col-3">
-            <label>Texto</label>
-            <input type="text" class="form-control" name="Text" value="@Model?.Text" />
-        </div>
+    <div class="col-md-2">
+        <label class="form-label">Nombre Categoría</label>
+        <input asp-for="CategoryName" class="form-control" />
+    </div>
 
-        <div class="col-3">
-            <label>Categoría</label>
-            <input type="text" class="form-control" name="CategoryName" value="@Model?.CategoryName" />
-        </div>
+    <div class="col-md-2">
+        <label class="form-label">Step</label>
+        <input asp-for="Step" class="form-control" />
+    </div>
 
-        <div class="col-2">
-            <label>Completado</label>
-            <select name="IsCompleted" class="form-control">
-                <option value="">--Todos--</option>
-                <option value="true" selected="@(Model?.IsCompleted == true)">Sí</option>
-                <option value="false" selected="@(Model?.IsCompleted == false)">No</option>
-            </select>
-        </div>
+    <div class="col-md-2">
+        <label class="form-label">Estado</label>
+        <select asp-for="IsCompleted" class="form-select">
+            <option value="">--</option>
+            <option value="true">Completadas</option>
+            <option value="false">Pendientes</option>
+        </select>
+    </div>
 
-        <div class="col-2">
-            <label>Step</label>
-            <input type="number" class="form-control" name="Step" value="@Model?.Step" />
-        </div>
-
-        <div class="col-2 d-flex align-items-end">
-            <button type="submit" class="btn btn-primary w-100">Buscar</button>
-        </div>
+    <div class="col-md-12">
+        <button type="button" id="btnBuscarAjax" class="btn btn-primary">Buscar (AJAX)</button>
     </div>
 </form>
 
+<div id="taskTableContainer">
+    @await Html.PartialAsync("_TaskTablePartial", Model.Result?.Items)
+</div>
 
-@if (Model?.Result?.Items == null || !Model.Result.Items.Any())
-{
-    <p>No se encontraron resultados.</p>
-}
-else
-{
-    <p>Mostrando @Model.Result.Items.Count() de @Model.Result.TotalCount resultados.</p>
-
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>Título</th>
-                <th>Categoría</th>
-                <th>Completado</th>
-                <th>Step</th>
-                <th>Fecha</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var t in Model.Result.Items)
-            {
-                <tr>
-                    <td>@t.Title</td>
-                    <td>@t.CategoryName</td>
-                    <td>@(t.IsCompleted ? "Sí" : "No")</td>
-                    <td>@t.Step</td>
-                    <td>@t.CreatedAt.ToString("dd/MM/yyyy HH:mm")</td>
-                </tr>
-            }
-        </tbody>
-    </table>
+@section Scripts {
+    <script src="~/js/Task/tasks-partial.js"></script>
 }

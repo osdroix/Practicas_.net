@@ -6,6 +6,15 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddApiClients();
+
+// ----------------------------------------------------------------------------------
+// Date: 2026-02-11
+// Author: [Usuario]
+// Description: Registro de servicios de negocio (Business Services).
+// Se llama al mÃ©todo de extensiÃ³n AddBusinessServices para registrar ITaskService y otros.
+// ----------------------------------------------------------------------------------
+builder.Services.AddBusinessServices();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -19,10 +28,12 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseRouting();
+app.UseMvcGlobalErrorHandler();
+
 
 app.UseAuthorization();
 
-//Esa línea define la ruta “clásica” (MVC) que ASP.NET Core usa para decidir qué controlador y qué acción ejecutar cuando llega una petición HTTP. Si llega una URL y no coincide con nada más específico,intenta interpretarla como:Controlador / Acción / Id opcional.
+//Esa lï¿½nea define la ruta ï¿½clï¿½sicaï¿½ (MVC) que ASP.NET Core usa para decidir quï¿½ controlador y quï¿½ acciï¿½n ejecutar cuando llega una peticiï¿½n HTTP. Si llega una URL y no coincide con nada mï¿½s especï¿½fico,intenta interpretarla como:Controlador / Acciï¿½n / Id opcional.
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Tasks}/{action=Index}/{id?}");
