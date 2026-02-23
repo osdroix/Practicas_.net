@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
+using ClosedXML.Excel;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TaskManager.Context;
 using TaskManager.DTOs.CategoryDto;
+using TaskManager.Interfaces.Categories;
 using TaskManager.Models;
 
 namespace TaskManager.Controllers
@@ -11,65 +13,51 @@ namespace TaskManager.Controllers
     [ApiController]
     public class CategoriesController : ControllerBase
     {
-        private readonly AppDbContext _context;
-        public CategoriesController(AppDbContext context)
+        private readonly ICategoryService _categoryService;
+
+        public CategoriesController(ICategoryService categoryService)
         {
-            _context = context;
+            _categoryService = categoryService;
         }
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CategoryDto>>> Get()
         {
-            var result = await _context.Categories
-                .OrderBy(c => c.Name)
-                .Select(c => new CategoryDto
-                {
-                    Id = c.Id,
-                    Name = c.Name
-                })
-                .ToListAsync();
-
-            return Ok(result);
+            var result = await _categoryService.GetAllAsync();
+            return Ok(result.Data);
         }
 
         // Post
         [HttpPost]
         public async Task<ActionResult<CategoryDto>> Create([FromBody] CreateCategoryRequest request)
         {
-            // Si usas [ApiController], ModelState se valida automáticamente.
-            // Igual puedes explicar que si falla devuelve 400.
+            var result = await _categoryService.CreateAsync(request);
+            if (!result.Success) return BadRequest(result.ErrorMessage);
 
-            var entity = new Category
-            {
-                Name = request.Name.Trim()
-            };
-
-            _context.Categories.Add(entity);
-            await _context.SaveChangesAsync();
-
-            var dto = new CategoryDto
-            {
-                Id = entity.Id,
-                Name = entity.Name
-            };
-
-            return CreatedAtAction(nameof(GetById), new { id = dto.Id }, dto);
+            return CreatedAtAction(nameof(GetById), new { id = result.Data.Id }, result.Data);
         }
 
         // obtener categoría en especifico
         [HttpGet("{id:int}")]
         public async Task<ActionResult<CategoryDto>> GetById(int id)
         {
-            var entity = await _context.Categories.FindAsync(id);
-            if (entity == null) return NotFound();
+            var result = await _categoryService.GetByIdAsync(id);
+            if (!result.Success) return NotFound();
 
-            var dto = new CategoryDto
+            return Ok(result.Data);
+        }
+        [HttpPost("import-excel")] // los archivos se envían por POST
+        public async Task<IActionResult> ImportFromExcel(IFormFile file)
+        {
+            var result = await _categoryService.ImportFromExcelAsync(file);
+
+            if (!result.Success)
+                return BadRequest(result.ErrorMessage);
+
+            return Ok(new
             {
-                Id = entity.Id,
-                Name = entity.Name
-            };
-
-            return Ok(dto);
+                Message = result.Data.Message
+            });
         }
 
     }

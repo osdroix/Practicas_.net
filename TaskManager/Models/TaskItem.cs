@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿﻿using Microsoft.EntityFrameworkCore.Migrations;
 using TaskManager.Migrations;
 
 namespace TaskManager.Models

@@ -1,10 +1,16 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿﻿using ClosedXML.Excel;
+using DocumentFormat.OpenXml.Office2021.DocumentTasks;
+using DocumentFormat.OpenXml.Wordprocessing;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using TaskManager.Context;
 using TaskManager.DTOs.TaskDto;
 using TaskManager.Interfaces.Tasks;
 using TaskManager.Models;
+using TaskManager.Utilities.Exceptions;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace TaskManager.Controllers
 {
@@ -20,70 +26,46 @@ namespace TaskManager.Controllers
             _taskService = taskService;
         }
         [HttpGet]
-        public async Task<ActionResult< List<TaskItem>>> Get()
+        public async Task<ActionResult<List<TaskItem>>> Get()
         {
-                    var tasks = await _context.Tasks
-            .Select(t => new TaskItemResponse
-            {
-                Id = t.Id,
-                Title = t.Title,
-                IsCompleted = t.IsCompleted
-            })
-            .ToListAsync();
+            var tasks = await _taskService.GetAllAsync();
+            return Ok(tasks);
+        }
+        [HttpPost("import-tasks-excel")]
+        public async Task<IActionResult> ImportFromExcel(IFormFile file)
+        {
+            var result = await _taskService.ImportFromExcelAsync(file);
+            if (!result.Success) return BadRequest(result.ErrorMessage);
+            return Ok(result.Data);
+        }
 
-                    return Ok(tasks);
+        // Convierte un string a booleano reconociendo múltiples formatos
+        private bool ConvertToBoolean(string v)
+        {
+            // Si está vacío o es null, retorna false
+            if (string.IsNullOrWhiteSpace(v)) return false;
+
+            // Normaliza el texto a mayúsculas sin espacios
+            v = v.Trim().ToUpper();
+
+            // Retorna true si coincide con alguno de estos valores
+            return v == "TRUE" || v == "VERDADERO" || v == "1" || v == "SÍ" || v == "YES";
         }
         // Retorna un registro
         [HttpGet("{id:int}")]
         public async Task<ActionResult<TaskItem>> GetById(int id)
         {
-            var task = await _context.Tasks.FindAsync(id);
-
-            if (task == null)
-                return NotFound();
-
-            var dto = new TaskItemResponse
-            {
-                Id = task.Id,
-                Title = task.Title,
-                IsCompleted = task.IsCompleted
-            };
-
-            return Ok(dto);
+            var result = await _taskService.GetByIdAsync(id);
+            if (!result.Success) return NotFound();
+            return Ok(result.Data);
         }
 
         [HttpPost]
         public async Task<ActionResult<TaskItem>> Create([FromBody] CreateTaskRequest request)
         {
-            if (request == null)
-                return BadRequest("Body requerido.");
-
-            if (string.IsNullOrWhiteSpace(request.Title))
-                return BadRequest("Title es requerido.");
-
-            var categoryExists = await _context.Categories.AnyAsync(c => c.Id == request.CategoryId);
-            if (!categoryExists)
-                return BadRequest("CategoryId no existe.");
-
-            var entity = new TaskItem
-            {
-                Title = request.Title.Trim(),
-                IsCompleted = false,
-                CategoryId = request.CategoryId
-            };
-
-            // registro
-            _context.Tasks.Add(entity);
-            int ContadorCambios = await _context.SaveChangesAsync(); 
-
-            var dto = new TaskItemResponse
-            {
-                Id = entity.Id,
-                Title = entity.Title,
-                IsCompleted = entity.IsCompleted
-            };
-
-            return CreatedAtAction(nameof(GetById), new { id = dto.Id }, dto);
+            var result = await _taskService.CreateAsync(request);
+            if (!result.Success) return BadRequest(result.ErrorMessage);
+            return CreatedAtAction(nameof(GetById), new { id = result.Data.Id }, result.Data);
         }
 
         // Update
@@ -91,19 +73,12 @@ namespace TaskManager.Controllers
         [HttpPut("{id:int}")]
         public async Task<IActionResult> Update(int id, [FromBody] UpdateTaskRequest request)
         {
-            var task = await _context.Tasks.FindAsync(id);
-            if (task == null) return NotFound();
-
-            if (request == null) return BadRequest("Body requerido.");
-            if (string.IsNullOrWhiteSpace(request.Title)) return BadRequest("Title es requerido.");
-
-            task.Title = request.Title.Trim();
-            if (request.IsCompleted.HasValue) {
-                task.IsCompleted = request.IsCompleted.Value;
-                    }
-
-            await _context.SaveChangesAsync();
-
+            var result = await _taskService.UpdateAsync(id, request);
+            if (!result.Success)
+            {
+                if (result.StatusCode == 404) return NotFound();
+                return BadRequest(result.ErrorMessage);
+            }
             return NoContent(); // 204
         }
 
@@ -111,12 +86,8 @@ namespace TaskManager.Controllers
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var task = await _context.Tasks.FindAsync(id);
-            if (task == null) return NotFound();
-
-            _context.Tasks.Remove(task);
-            await _context.SaveChangesAsync();
-
+            var result = await _taskService.DeleteAsync(id);
+            if (!result.Success) return NotFound();
             return NoContent();
         }
 
@@ -126,88 +97,23 @@ namespace TaskManager.Controllers
             [FromQuery] SearchFilter request
             )
         {
-            var query = _context.Tasks.AsQueryable();
-
-            // Filtros
-            if (!string.IsNullOrWhiteSpace(request.text))
-                query = query.Where(t => t.Title.Contains(request.text));
-
-            if (request.completed.HasValue)
-                query = query.Where(t => t.IsCompleted == request.completed);
-
-            if (request.step.HasValue)
-                query = query.Where(t => t.Step == request.step);
-
-            // Ordenamiento
-            query = request.orderBy switch
-            {
-                "title" => query.OrderBy(t => t.Title),
-                "title_desc" => query.OrderByDescending(t => t.Title),
-                "date" => query.OrderBy(t => t.CreatedAt),
-                "date_desc" => query.OrderByDescending(t => t.CreatedAt),
-                "step" => query.OrderBy(t => t.Step),
-                "step_desc" => query.OrderByDescending(t => t.Step),
-                _ => query.OrderBy(t => t.Id)
-            };
-
-            // Paginación
-            query = query
-                .Skip((request.Page - 1) * request.PageSize)
-                .Take(request.PageSize);
-
-            var results = await query
-                .Select(t => new TaskQueryResultDto
-                {
-                    Id = t.Id,
-                    Title = t.Title,
-                    IsCompleted = t.IsCompleted,
-                    Step = t.Step,
-                    CreatedAt = t.CreatedAt
-                })
-                .ToListAsync();
-
+            var results = await _taskService.SearchAsync(request);
             return Ok(results);
         }
 
-        [HttpGet("paged")] 
+        [HttpGet("paged")]
         public async Task<ActionResult<IEnumerable<TaskQueryResultDto>>> GetPaged(
             [FromQuery] PaginationDto pagination // Dto
-            ) 
-        { 
-            var query = _context.Tasks
-                .OrderBy(t => t.Id)
-                .Skip((pagination.Page - 1) * pagination.PageSize)
-                .Take(pagination.PageSize);
-
-            var result = await query.Select(t => new TaskQueryResultDto 
-            { 
-                Id = t.Id,
-                Title = t.Title,
-                IsCompleted = t.IsCompleted,
-                Step = t.Step,
-                CreatedAt = t.CreatedAt
-            })
-                .ToListAsync();
-            return Ok(result); }
+            )
+        {
+            var result = await _taskService.GetPagedAsync(pagination);
+            return Ok(result);
+        }
 
         [HttpGet("with-category")]
         public async Task<ActionResult<IEnumerable<TaskWithCategoryDto>>> GetWithCategory()
         {
-            var result = await _context.Tasks
-                .Include(t => t.Category) // forma estandard de un JOIN
-                .OrderBy(t => t.Id)
-                .Select(t => new TaskWithCategoryDto
-                {
-                    Id = t.Id,
-                    Title = t.Title,
-                    IsCompleted = t.IsCompleted,
-                    Step = t.Step,
-                    CreatedAt = t.CreatedAt,
-                    CategoryId = t.CategoryId ?? 0,
-                    CategoryName = t.Category.Name
-                })
-                .ToListAsync();
-
+            var result = await _taskService.GetWithCategoryAsync();
             return Ok(result);
         }
 
@@ -224,15 +130,21 @@ namespace TaskManager.Controllers
     [FromQuery] int pageSize = 10
 )
         {
-
-            if (page <= 0) return BadRequest("Page debe ser mayor a 0.");
-            if (pageSize <= 0 || pageSize > 100) return BadRequest("PageSize debe estar entre 1 y 100.");
-
+            //throw new BusinessException("Hola que hace");
             var result = await _taskService.AdvancedSearchAsync(
                 text, completed, step, categoryId, categoryName, page, pageSize);
 
-            return Ok(result);
+            if (!result.Success) return BadRequest(result.ErrorMessage);
+
+            return Ok(result.Data);
+        }
+        [HttpGet("ajax-search")]
+        public async Task<IActionResult> AjaxSearch([FromQuery] string? text)
+        {
+            var results = await _taskService.AjaxSearchAsync(text);
+            return Ok(results);
         }
     }
-}
 
+
+}

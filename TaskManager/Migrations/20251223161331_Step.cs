@@ -10,12 +10,12 @@ namespace TaskManager.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<int>(
+            /*migrationBuilder.AddColumn<int>(
                 name: "Step",
                 table: "Tasks",
                 type: "int",
                 nullable: false,
-                defaultValue: 0);
+                defaultValue: 0);*/
         }
 
         /// <inheritdoc />

@@ -9,7 +9,7 @@ namespace TaskManager.Migrations
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
-        {
+        {/*
             migrationBuilder.CreateTable(
                 name: "Tasks",
                 columns: table => new
@@ -22,7 +22,7 @@ namespace TaskManager.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Tasks", x => x.Id);
-                });
+                });*/
         }
 
         /// <inheritdoc />

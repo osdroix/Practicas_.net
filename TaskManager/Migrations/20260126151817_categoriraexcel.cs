@@ -5,35 +5,35 @@
 namespace TaskManager.Migrations
 {
     /// <inheritdoc />
-    public partial class Add_Logic_Delete : Migration
+    public partial class categoriraexcel : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            /*migrationBuilder.AddColumn<bool>(
-                name: "IsDeleted",
-                table: "Tasks",
-                type: "bit",
+            migrationBuilder.AddColumn<string>(
+                name: "Code",
+                table: "Categories",
+                type: "nvarchar(max)",
                 nullable: false,
-                defaultValue: false);
+                defaultValue: "");
 
             migrationBuilder.AddColumn<bool>(
-                name: "IsDeleted",
+                name: "IsActive",
                 table: "Categories",
                 type: "bit",
                 nullable: false,
-                defaultValue: false);*/
+                defaultValue: false);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "IsDeleted",
-                table: "Tasks");
+                name: "Code",
+                table: "Categories");
 
             migrationBuilder.DropColumn(
-                name: "IsDeleted",
+                name: "IsActive",
                 table: "Categories");
         }
     }
