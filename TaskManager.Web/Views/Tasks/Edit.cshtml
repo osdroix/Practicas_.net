@@ -1,7 +1,9 @@
-﻿@model TaskManager.Web.Models.EditTaskViewModel
+@model TaskManager.Web.Models.EditTaskViewModel
 
 @{
     ViewData["Title"] = "Editar tarea";
+    @* Categorías precargadas desde el controlador *@
+    var categories = ViewData["Categories"] as IEnumerable<CategoryItemViewModel>;
 }
 
 <h1>Editar tarea</h1>
@@ -21,7 +23,31 @@
 
     <div class="mb-3">
         <label class="form-label">Categoría</label>
-        <input asp-for="CategoryId" type="number" class="form-control" />
+        <select asp-for="CategoryId" class="form-select">
+            <option value="">Seleccione una categoría</option>
+            @if (categories != null && categories.Any())
+            {
+                @* Opciones construidas desde las categorías precargadas *@
+                foreach (var cat in categories)
+                {
+                    var value = cat.Id != 0 ? cat.Id : cat.CategoryId;
+                    var name = !string.IsNullOrWhiteSpace(cat.Name) ? cat.Name : cat.CategoryName;
+                    var selected = Model.CategoryId == value;
+                    if (selected)
+                    {
+                        <option value="@value" selected="selected">@name</option>
+                    }
+                    else
+                    {
+                        <option value="@value">@name</option>
+                    }
+                }
+            }
+            else
+            {
+                <option value="">No hay categorías disponibles</option>
+            }
+        </select>
         <span asp-validation-for="CategoryId" class="text-danger"></span>
     </div>
 

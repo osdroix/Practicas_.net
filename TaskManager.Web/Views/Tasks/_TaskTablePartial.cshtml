@@ -22,8 +22,11 @@
                     <td>@(t.IsCompleted ? "Sí" : "No")</td>
                     <td>
                         <a asp-action="Details" asp-route-id="@t.Id" class="btn btn-sm btn-info">Ver</a>
-                        <a asp-action="Edit" asp-route-id="@t.Id" class="btn btn-sm btn-warning">Editar</a>
-
+                        <!--<a asp-action="Edit" asp-route-id="@t.Id" class="btn btn-sm btn-warning">Editar</a>-->
+                        <button class="btn btn btn-warning btnEdit"
+                            data-id="@t.Id"> <!--Este se ecupa para mandar la ide el item-->
+                            Editar
+                        </button>
                         <form asp-action="Delete" method="post" class="d-inline">
                             <input type="hidden" name="id" value="@t.Id" />
                             <button class="btn btn-sm btn-danger">Eliminar</button>

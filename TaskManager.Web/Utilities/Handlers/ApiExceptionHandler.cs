@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+using System.Text.Json;
 using TaskManager.Web.Utilities.Exceptions;
 
 namespace TaskManager.Web.Http
@@ -9,7 +9,7 @@ namespace TaskManager.Web.Http
             HttpRequestMessage request,
             CancellationToken cancellationToken)
         {
-            var response = await base.SendAsync(request, cancellationToken);
+           var response = await base.SendAsync(request, cancellationToken);
 
             if (response.IsSuccessStatusCode)
                 return response;
@@ -28,13 +28,15 @@ namespace TaskManager.Web.Http
                     content,
                     new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
-                // Tu API manda el mensaje real en "detail"
-                return err?.detail ?? err?.message;
+                if (!string.IsNullOrWhiteSpace(err?.detail) || !string.IsNullOrWhiteSpace(err?.message))
+                    return err.detail ?? err.message;
             }
             catch
             {
                 return null;
             }
+
+            return null;
         }
 
         private sealed class ApiErrorResponse
@@ -44,3 +46,4 @@ namespace TaskManager.Web.Http
         }
     }
 }
+

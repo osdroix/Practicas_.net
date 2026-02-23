@@ -1,0 +1,84 @@
+@model TaskManager.Web.Models.EditTaskViewModel
+
+<div class="modal-header">
+    <h5 class="modal-title">
+        @(Model.Id == 0 ? "Crear tarea" : "Editar tarea")
+    </h5>
+    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+</div>
+
+@{
+    @* Categorías precargadas desde el controlador para no depender del fetch *@
+    var categories = ViewData["Categories"] as IEnumerable<CategoryItemViewModel>;
+    var hasCategories = categories != null && categories.GetEnumerator().MoveNext();
+}
+
+<div class="modal-body">
+    <div id="formErrorSummary" class="alert alert-danger d-none"></div>
+
+    <form id="taskForm">
+        <input type="hidden" name="Id" value="@Model.Id" />
+
+        <div class="mb-3">
+            <label for="Title">Título</label>
+            <input id="Title" name="Title" value="@Model.Title" class="form-control" />
+            <span class="text-danger" data-valmsg-for="Title"></span>
+        </div>
+
+        <div class="mb-3">
+            <label for="CategoryId">Categoría</label>
+            <select id="CategoryId"
+                    name="CategoryId"
+                    class="form-select"
+                    data-selected-category="@Model.CategoryId"
+                    data-preloaded="@(hasCategories ? "true" : "false")">
+                @* Si hay categorías precargadas se renderizan aquí; si no, el JS puede intentar cargar *@
+                @if (hasCategories)
+                {
+                    <option value="">Seleccione una categoría</option>
+                    foreach (var cat in categories)
+                    {
+                        var value = cat.Id != 0 ? cat.Id : cat.CategoryId;
+                        var name = !string.IsNullOrWhiteSpace(cat.Name) ? cat.Name : cat.CategoryName;
+                        var selected = Model.CategoryId == value;
+                        if (selected)
+                        {
+                            <option value="@value" selected="selected">@name</option>
+                        }
+                        else
+                        {
+                            <option value="@value">@name</option>
+                        }
+                    }
+                }
+                else
+                {
+                    <option value="">No hay categorías disponibles</option>
+                }
+            </select>
+            <span class="text-danger" data-valmsg-for="CategoryId"></span>
+        </div>
+
+        <div class="mb-3" id="stepGroup">
+            <label for="Step">Step</label>
+            <input id="Step" name="Step" value="@Model.Step" type="number" class="form-control" />
+            <span class="text-danger" data-valmsg-for="Step"></span>
+        </div>
+
+        <div class="form-check form-switch mb-2">
+            <input class="form-check-input"
+                   type="checkbox"
+                   id="IsCompletedSwitch"
+                   @(Model.IsCompleted ? "checked" : "") />
+            <label class="form-check-label" for="IsCompletedSwitch">
+                Marcar como completada
+            </label>
+        </div>
+    </form>
+</div>
+
+<div class="modal-footer">
+    <button id="btnSaveTask" class="btn btn-primary">
+        Guardar
+    </button>
+</div>

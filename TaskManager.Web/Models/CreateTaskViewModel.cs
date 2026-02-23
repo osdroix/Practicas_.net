@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 
 namespace TaskManager.Web.Models
 {
@@ -12,5 +12,7 @@ namespace TaskManager.Web.Models
 
         [Range(1, 5, ErrorMessage = "El step debe estar entre 1 y 5")]
         public int Step { get; set; }
+
+        public bool IsCompleted { get; set; }
     }
 }

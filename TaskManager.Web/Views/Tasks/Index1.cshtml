@@ -1,6 +1,11 @@
-﻿@model TaskManager.Web.Models.TaskSearchViewModel
+@model TaskManager.Web.Models.TaskSearchViewModel
 
 <h1>Listado de Tareas</h1>
+<button id="btnCrearTask"
+    class="btn btn-success mb-3">
+    <!--Este se ecupa para mandar la ide el item-->
+    Crear tarea
+</button>
 
 <form id="filterForm" class="row g-3 mb-3">
     <div class="col-md-3">
@@ -41,6 +46,13 @@
     @await Html.PartialAsync("_TaskTablePartial", Model.Result?.Items)
 </div>
 
+<!--se integra el modal para el formulario-->
+<div class="modal fade" id="taskModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content" id="taskModalContent">
+        </div>
+    </div>
+</div>
 @section Scripts {
-    <script src="~/js/Task/tasks-partial.js"></script>
+    <script src="~/js/Task/task-modal.js" asp-append-version="true"></script>
 }

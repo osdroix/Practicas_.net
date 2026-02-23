@@ -12,12 +12,12 @@ namespace TaskManager.Web.Services
     // ----------------------------------------------------------------------------------
     public class TaskService : ITaskService
     {
-        private readonly ITaskApiClient _client;
+        private readonly ITaskApiClient _httpClient;
         private readonly ILogger<TaskService> _logger;
 
         public TaskService(ITaskApiClient client, ILogger<TaskService> logger)
         {
-            _client = client;
+            _httpClient = client;
             _logger = logger;
         }
 
@@ -30,7 +30,7 @@ namespace TaskManager.Web.Services
             // ----------------------------------------------------------------------------------
             try
             {
-                var result = await _client.GetTasksAsync(page, pageSize);
+                var result = await _httpClient.GetTasksAsync(page, pageSize);
                 return ServiceResult<PagedResultViewModel<TaskViewModel>>.Ok(result);
             }
             catch (Exception ex)
@@ -57,7 +57,7 @@ namespace TaskManager.Web.Services
                 if (model.Page == 0)
                     model.Page = 1;
 
-                var result = await _client.SearchTasksAsync(model);
+                var result = await _httpClient.SearchTasksAsync(model);
                 return ServiceResult<PagedResultViewModel<TaskViewModel>>.Ok(result);
             }
             catch (Exception ex)
@@ -71,7 +71,7 @@ namespace TaskManager.Web.Services
         {
             try
             {
-                await _client.CreateTaskAsync(model);
+                await _httpClient.CreateTaskAsync(model);
                 return ServiceResult.Ok();
             }
             catch (Exception ex)
@@ -85,7 +85,7 @@ namespace TaskManager.Web.Services
         {
             try
             {
-                var model = await _client.GetTaskByIdAsync(id);
+                var model = await _httpClient.GetTaskByIdAsync(id);
                 if (model == null)
                     return ServiceResult<EditTaskViewModel>.Fail("Tarea no encontrada");
                 
@@ -102,7 +102,7 @@ namespace TaskManager.Web.Services
         {
             try
             {
-                await _client.UpdateTaskAsync(model);
+                await _httpClient.UpdateTaskAsync(model);
                 return ServiceResult.Ok("La tarea fue actualizada correctamente.");
             }
             catch (Exception ex)
@@ -116,7 +116,7 @@ namespace TaskManager.Web.Services
         {
             try
             {
-                await _client.DeleteTaskAsync(id);
+                await _httpClient.DeleteTaskAsync(id);
                 return ServiceResult.Ok("La tarea fue eliminada correctamente.");
             }
             catch (Exception ex)
@@ -130,7 +130,7 @@ namespace TaskManager.Web.Services
         {
             try
             {
-                var task = await _client.GetTaskDetailAsync(id);
+                var task = await _httpClient.GetTaskDetailAsync(id);
                 if (task == null)
                     return ServiceResult<TaskViewModel>.Fail("La tarea no existe.");
 
@@ -152,7 +152,7 @@ namespace TaskManager.Web.Services
             // ----------------------------------------------------------------------------------
             try
             {
-                var result = await _client.AdvancedSearchAsync(filters);
+                var result = await _httpClient.AdvancedSearchAsync(filters);
                 return ServiceResult<PagedResultViewModel<TaskViewModel>>.Ok(result);
             }
             catch (Exception ex)
@@ -172,7 +172,7 @@ namespace TaskManager.Web.Services
             // ----------------------------------------------------------------------------------
             try
             {
-                var result = await _client.SearchTasksAsync(new TaskSearchViewModel
+                var result = await _httpClient.SearchTasksAsync(new TaskSearchViewModel
                 {
                     Text = text,
                     Page = 1,

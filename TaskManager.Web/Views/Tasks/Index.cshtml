@@ -46,51 +46,14 @@
     <div class="tab-pane fade show active" id="general" role="tabpanel" aria-labelledby="general-tab">
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h1>Tareas</h1>
-            <a asp-action="Create" class="btn btn-sm btn-primary">Agregar Nueva Tarea</a>
+            <button id="btnCrearTask" type="button" class="btn btn-sm btn-primary">
+                Agregar Nueva Tarea
+            </button>
         </div>
 
-        @if (Model.Result != null && Model.Result.Items != null)
-        {
-            <p>Mostrando @Model.Result.Items.Count() de @Model.Result.TotalCount</p>
-
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th>Id</th>
-                        <th>Título</th>
-                        <th>Categoría</th>
-                        <th>Completada</th>
-                        <th>Step</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var t in Model.Result.Items)
-                    {
-                        <tr>
-                            <td>@t.Id</td>
-                            <td>@t.Title</td>
-                            <td>@t.CategoryName</td>
-                            <td>@(t.IsCompleted ? "Sí" : "No")</td>
-                            <td>@t.Step</td>
-                            <td>
-                                <a asp-controller="Tasks" asp-action="Details" asp-route-id="@t.Id" class="btn btn-sm btn-primary">
-                                    Ver detalles
-                                </a>
-                                <a asp-action="Edit" asp-route-id="@t.Id" class="btn btn-sm btn-primary">Editar</a> 
-                                <form asp-action="Delete" method="post" class="d-inline">
-                                    <input type="hidden" name="id" value="@t.Id" />
-                                    <button type="submit" class="btn btn-danger btn-sm"
-                                            onclick="return confirm('¿Estás seguro de que deseas eliminar esta tarea?');">
-                                        Eliminar
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        }
+        <div id="taskTableContainer">
+            @await Html.PartialAsync("_TaskTablePartial", Model.Result?.Items)
+        </div>
     </div>
 
     <!-- SECTION 2: Index1 Content (Integrated) -->
@@ -321,8 +284,16 @@
     </div>
 </div>
 
+<div class="modal fade" id="taskModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content" id="taskModalContent">
+        </div>
+    </div>
+</div>
+
 @section Scripts {
-    <script src="~/js/Task/task-ajax.js"></script>
+    <script src="~/js/Task/task-modal.js" asp-append-version="true"></script>
+    <script src="~/js/Task/task-ajax.js" asp-append-version="true"></script>
     <script>
         // ----------------------------------------------------------------------------------
         // Date: 2026-02-11

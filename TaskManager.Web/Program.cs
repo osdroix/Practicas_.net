@@ -1,19 +1,19 @@
 using TaskManager.Web.Extensions;
 using TaskManager.Web.Services;
+using TaskManager.Web.Http;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddApiClients();
-
-// ----------------------------------------------------------------------------------
-// Date: 2026-02-11
-// Author: [Usuario]
-// Description: Registro de servicios de negocio (Business Services).
-// Se llama al método de extensión AddBusinessServices para registrar ITaskService y otros.
-// ----------------------------------------------------------------------------------
 builder.Services.AddBusinessServices();
+
+// Registra el HttpClient con el manejador de excepciones
+builder.Services.AddTransient<ApiExceptionHandler>();
+
+builder.Services.AddHttpClient("TaskManagerApi")
+    .AddHttpMessageHandler<ApiExceptionHandler>();
 
 var app = builder.Build();
 
@@ -32,6 +32,8 @@ app.UseMvcGlobalErrorHandler();
 
 
 app.UseAuthorization();
+
+app.MapControllers();
 
 //Esa l�nea define la ruta �cl�sica� (MVC) que ASP.NET Core usa para decidir qu� controlador y qu� acci�n ejecutar cuando llega una petici�n HTTP. Si llega una URL y no coincide con nada m�s espec�fico,intenta interpretarla como:Controlador / Acci�n / Id opcional.
 app.MapControllerRoute(

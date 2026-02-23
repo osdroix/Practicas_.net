@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Json;
+using System.Net.Http.Json;
+using System.Text.Json;
 using TaskManager.Web.Models;
 
 namespace TaskManager.Web.Services
@@ -51,10 +52,40 @@ namespace TaskManager.Web.Services
 
         public async Task CreateTaskAsync(CreateTaskViewModel model)
         {
+            var payload = new Dictionary<string, object?>
+            {
+                ["title"] = model.Title,
+                ["Title"] = model.Title,
+                ["categoryId"] = model.CategoryId,
+                ["CategoryId"] = model.CategoryId,
+                ["step"] = model.Step,
+                ["Step"] = model.Step,
+                ["isCompleted"] = model.IsCompleted,
+                ["IsCompleted"] = model.IsCompleted
+            };
+
             var response = await _httpClient.PostAsJsonAsync(
                 "/api/tasks",
-                model
+                payload
             );
+
+            if (response.StatusCode == System.Net.HttpStatusCode.UnsupportedMediaType)
+            {
+                var formPayload = new Dictionary<string, string?>
+                {
+                    ["Title"] = model.Title,
+                    ["CategoryId"] = model.CategoryId.ToString(),
+                    ["Step"] = model.Step.ToString(),
+                    ["IsCompleted"] = model.IsCompleted ? "true" : "false"
+                };
+
+                var formRequest = new HttpRequestMessage(HttpMethod.Post, "/api/tasks")
+                {
+                    Content = new FormUrlEncodedContent(formPayload)
+                };
+
+                response = await _httpClient.SendAsync(formRequest);
+            }
 
             response.EnsureSuccessStatusCode();
         }
@@ -74,17 +105,26 @@ namespace TaskManager.Web.Services
         }
         public async Task UpdateTaskAsync(EditTaskViewModel model)
         {
+            var payload = new Dictionary<string, object?>
+            {
+                ["id"] = model.Id,
+                ["Id"] = model.Id,
+                ["title"] = model.Title,
+                ["Title"] = model.Title,
+                ["categoryId"] = model.CategoryId,
+                ["CategoryId"] = model.CategoryId,
+                ["step"] = model.Step,
+                ["Step"] = model.Step,
+                ["isCompleted"] = model.IsCompleted,
+                ["IsCompleted"] = model.IsCompleted
+            };
+
             var response = await _httpClient.PutAsJsonAsync(
                 $"/api/tasks/{model.Id}",
-                model
+                payload
             );
 
-            if (!response.IsSuccessStatusCode)
-            {
-                // Leer mensaje de la API
-                var error = await response.Content.ReadAsStringAsync();
-                throw new Exception(error);
-            }
+            response.EnsureSuccessStatusCode();
         }
 
         public async Task<bool> DeleteTaskAsync(int id)
