@@ -1,16 +1,15 @@
 using Microsoft.AspNetCore.Mvc;
 using TaskManager.Web.Services;
-using TaskManager.Web.Utilities.Exceptions;
 
 namespace TaskManager.Web.Controllers
 {
     public class CategoriesController : Controller
     {
-        private readonly ICategoryApiClient _categoryApiClient;
+        private readonly ICategoryService _categoryService;
 
-        public CategoriesController(ICategoryApiClient categoryApiClient)
+        public CategoriesController(ICategoryService categoryService)
         {
-            _categoryApiClient = categoryApiClient;
+            _categoryService = categoryService;
         }
 
         [HttpGet]
@@ -28,14 +27,15 @@ namespace TaskManager.Web.Controllers
                 return View();
             }
 
-            try
+            var result = await _categoryService.ImportCategoriesFromExcelAsync(file);
+
+            if (result.Success)
             {
-                var resultMessage = await _categoryApiClient.ImportCategoriesFromExcelAsync(file);
-                TempData["Success"] = resultMessage;
+                TempData["Success"] = result.Message;
             }
-            catch (Exception ex)
+            else
             {
-                TempData["Error"] = "Ocurrió un error al importar el archivo: " + ex.Message;
+                TempData["Error"] = result.Message;
             }
 
             return View();
@@ -49,39 +49,39 @@ namespace TaskManager.Web.Controllers
         [HttpGet("api/categories")]
         public async Task<IActionResult> GetCategories()
         {
-            try
+            var result = await _categoryService.GetCategoriesAsync();
+
+            if (result.Success)
             {
-                // Endpoint JSON para el frontend (select de categorías)
-                var categories = await _categoryApiClient.GetCategoriesAsync();
-                return Json(categories);
+                return Json(result.Data);
             }
-            catch (ApiException ex)
+
+            var statusCode = result.StatusCode ?? 500;
+            if (string.IsNullOrWhiteSpace(result.Detail))
             {
-                return StatusCode(ex.StatusCode, new { message = ex.Message });
+                return StatusCode(statusCode, new { message = result.Message });
             }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { message = "Error al obtener categorías.", detail = ex.Message });
-            }
+
+            return StatusCode(statusCode, new { message = result.Message, detail = result.Detail });
         }
 
         [HttpGet]
         public async Task<IActionResult> GetCategoriesList()
         {
-            try
+            var result = await _categoryService.GetCategoriesAsync();
+
+            if (result.Success)
             {
-                // Fallback para cuando el endpoint /api/categories no esté disponible en el navegador
-                var categories = await _categoryApiClient.GetCategoriesAsync();
-                return Json(categories);
+                return Json(result.Data);
             }
-            catch (ApiException ex)
+
+            var statusCode = result.StatusCode ?? 500;
+            if (string.IsNullOrWhiteSpace(result.Detail))
             {
-                return StatusCode(ex.StatusCode, new { message = ex.Message });
+                return StatusCode(statusCode, new { message = result.Message });
             }
-            catch (Exception ex)
-            {
-                return StatusCode(500, new { message = "Error al obtener categorías.", detail = ex.Message });
-            }
+
+            return StatusCode(statusCode, new { message = result.Message, detail = result.Detail });
         }
     }
 }

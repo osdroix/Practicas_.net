@@ -31,6 +31,7 @@ namespace TaskManager.Web.Extensions
         public static IServiceCollection AddBusinessServices(this IServiceCollection services)
         {
             services.AddScoped<ITaskService, TaskService>();
+            services.AddScoped<ICategoryService, CategoryService>();
             return services;
         }
     }

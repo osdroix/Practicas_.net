@@ -17,17 +17,17 @@ namespace TaskManager.Web.Controllers
         // Original Code:
         private readonly ITaskApiClient _client;
         private readonly ITaskService _service;
-        private readonly ICategoryApiClient _categoryApiClient;
+        private readonly ICategoryService _categoryService;
 
         // Original Code:
         // public TasksController(ITaskApiClient client)
         // {
         //     _client = client;
         // }
-        public TasksController(ITaskService service, ICategoryApiClient categoryApiClient)
+        public TasksController(ITaskService service, ICategoryService categoryService)
         {
             _service = service;
-            _categoryApiClient = categoryApiClient;
+            _categoryService = categoryService;
         }
 
         // ----------------------------------------------------------------------------------
@@ -390,15 +390,8 @@ namespace TaskManager.Web.Controllers
 
         private async Task<List<CategoryItemViewModel>> GetCategoriesSafeAsync()
         {
-            try
-            {
-                // Manejo seguro: nunca romper la vista si falla la API de categorías
-                return await _categoryApiClient.GetCategoriesAsync();
-            }
-            catch
-            {
-                return new List<CategoryItemViewModel>();
-            }
+            var result = await _categoryService.GetCategoriesAsync();
+            return result.Data ?? new List<CategoryItemViewModel>();
         }
     }
 }

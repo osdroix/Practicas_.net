@@ -47,15 +47,75 @@
         <div class="d-flex justify-content-between align-items-center mb-3">
             <h1>Tareas</h1>
             <button id="btnCrearTask" type="button" class="btn btn-sm btn-primary">
-                Agregar Nueva Tarea
+                Agregar Nueva Tareas
             </button>
         </div>
 
         <div id="taskTableContainer">
             @await Html.PartialAsync("_TaskTablePartial", Model.Result?.Items)
         </div>
-    </div>
+        
+        <!-- Paginación Mejorada para la Vista General -->
+        @if (Model.Result != null && Model.Result.TotalCount > 0)
+        {
+            var pageSize = Model.PageSize > 0 ? Model.PageSize : 10;
+            var totalPages = (int)Math.Ceiling((double)Model.Result.TotalCount / pageSize);
+            var currentPage = Model.Page;
+            var startPage = Math.Max(1, currentPage - 2);
+            var endPage = Math.Min(totalPages, currentPage + 2);
 
+            if (totalPages > 1)
+            {
+                <nav class="mt-3" aria-label="Navegación de páginas">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item @(currentPage == 1 ? "disabled" : "")">
+                            <a class="page-link" asp-action="Index" asp-route-Page="@(currentPage - 1)" aria-label="Anterior">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                        </li>
+
+                        @if (startPage > 1)
+                        {
+                            <li class="page-item">
+                                <a class="page-link" asp-action="Index" asp-route-Page="1">1</a>
+                            </li>
+                            @if (startPage > 2)
+                            {
+                                <li class="page-item disabled"><span class="page-link">...</span></li>
+                            }
+                        }
+
+                        @for (int i = startPage; i <= endPage; i++)
+                        {
+                            <li class="page-item @(i == currentPage ? "active" : "")">
+                                <a class="page-link" asp-action="Index" asp-route-Page="@i">@i</a>
+                            </li>
+                        }
+
+                        @if (endPage < totalPages)
+                        {
+                            @if (endPage < totalPages - 1)
+                            {
+                                <li class="page-item disabled"><span class="page-link">...</span></li>
+                            }
+                            <li class="page-item">
+                                <a class="page-link" asp-action="Index" asp-route-Page="@totalPages">@totalPages</a>
+                            </li>
+                        }
+
+                        <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+                            <a class="page-link" asp-action="Index" asp-route-Page="@(currentPage + 1)" aria-label="Siguiente">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="text-center mt-2 text-muted">
+                        <small>Página @currentPage de @totalPages (Total: @Model.Result.TotalCount registros)</small>
+                    </div>
+                </nav>
+            }
+        }
+    </div>
     <!-- SECTION 2: Index1 Content (Integrated) -->
     @* 
         ----------------------------------------------------------------------------------
@@ -226,28 +286,113 @@
             <p>No se encontraron resultados.</p>
         }
         
-        @if (Model.Result != null && Model.Result.TotalCount > 1)
+        <!-- Paginación Mejorada para Búsqueda Avanzada -->
+        @if (Model.Result != null && Model.Result.TotalCount > 0)
         {
-            <nav>
-                <ul class="pagination">
-                    @for (int i = 1; i <= Model.Result.TotalCount; i++)
-                    {
-                        <li class="page-item @(i == Model.Page ? "active" : "")">
+            var pageSize = Model.PageSize > 0 ? Model.PageSize : 10;
+            var totalPages = (int)Math.Ceiling((double)Model.Result.TotalCount / pageSize);
+            var currentPage = Model.Page;
+            var startPage = Math.Max(1, currentPage - 2);
+            var endPage = Math.Min(totalPages, currentPage + 2);
+
+            if (totalPages > 1)
+            {
+                <nav aria-label="Navegación de páginas">
+                    <ul class="pagination">
+                        <li class="page-item @(currentPage == 1 ? "disabled" : "")">
                             <a class="page-link"
                                asp-action="Index"
-                               asp-route-Page="@i"
+                               asp-route-Page="@(currentPage - 1)"
                                asp-route-Text="@Model.Text"
                                asp-route-CategoryId="@Model.CategoryId"
                                asp-route-CategoryName="@Model.CategoryName"
                                asp-route-Step="@Model.Step"
                                asp-route-IsCompleted="@Model.IsCompleted"
-                               asp-route-tab="advanced-search">
-                                @i
+                               asp-route-tab="advanced-search"
+                               aria-label="Anterior">
+                                <span aria-hidden="true">&laquo;</span>
                             </a>
                         </li>
-                    }
-                </ul>
-            </nav>
+
+                        @if (startPage > 1)
+                        {
+                            <li class="page-item">
+                                <a class="page-link"
+                                   asp-action="Index"
+                                   asp-route-Page="1"
+                                   asp-route-Text="@Model.Text"
+                                   asp-route-CategoryId="@Model.CategoryId"
+                                   asp-route-CategoryName="@Model.CategoryName"
+                                   asp-route-Step="@Model.Step"
+                                   asp-route-IsCompleted="@Model.IsCompleted"
+                                   asp-route-tab="advanced-search">
+                                    1
+                                </a>
+                            </li>
+                            @if (startPage > 2)
+                            {
+                                <li class="page-item disabled"><span class="page-link">...</span></li>
+                            }
+                        }
+
+                        @for (int i = startPage; i <= endPage; i++)
+                        {
+                            <li class="page-item @(i == currentPage ? "active" : "")">
+                                <a class="page-link"
+                                   asp-action="Index"
+                                   asp-route-Page="@i"
+                                   asp-route-Text="@Model.Text"
+                                   asp-route-CategoryId="@Model.CategoryId"
+                                   asp-route-CategoryName="@Model.CategoryName"
+                                   asp-route-Step="@Model.Step"
+                                   asp-route-IsCompleted="@Model.IsCompleted"
+                                   asp-route-tab="advanced-search">
+                                    @i
+                                </a>
+                            </li>
+                        }
+
+                        @if (endPage < totalPages)
+                        {
+                            @if (endPage < totalPages - 1)
+                            {
+                                <li class="page-item disabled"><span class="page-link">...</span></li>
+                            }
+                            <li class="page-item">
+                                <a class="page-link"
+                                   asp-action="Index"
+                                   asp-route-Page="@totalPages"
+                                   asp-route-Text="@Model.Text"
+                                   asp-route-CategoryId="@Model.CategoryId"
+                                   asp-route-CategoryName="@Model.CategoryName"
+                                   asp-route-Step="@Model.Step"
+                                   asp-route-IsCompleted="@Model.IsCompleted"
+                                   asp-route-tab="advanced-search">
+                                    @totalPages
+                                </a>
+                            </li>
+                        }
+
+                        <li class="page-item @(currentPage == totalPages ? "disabled" : "")">
+                            <a class="page-link"
+                               asp-action="Index"
+                               asp-route-Page="@(currentPage + 1)"
+                               asp-route-Text="@Model.Text"
+                               asp-route-CategoryId="@Model.CategoryId"
+                               asp-route-CategoryName="@Model.CategoryName"
+                               asp-route-Step="@Model.Step"
+                               asp-route-IsCompleted="@Model.IsCompleted"
+                               asp-route-tab="advanced-search"
+                               aria-label="Siguiente">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="mt-2 text-muted">
+                        <small>Página @currentPage de @totalPages (Total: @Model.Result.TotalCount registros)</small>
+                    </div>
+                </nav>
+            }
         }
     </div>
     <!-- SECTION 4: Ajax Demo Content (Integrated) -->

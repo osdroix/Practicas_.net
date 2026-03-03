@@ -13,6 +13,8 @@ namespace TaskManager.Web.Models
     {
         public bool Success { get; protected set; }
         public string Message { get; protected set; }
+        public int? StatusCode { get; protected set; }
+        public string Detail { get; protected set; }
 
         public static ServiceResult Ok(string message = null)
         {
@@ -22,6 +24,11 @@ namespace TaskManager.Web.Models
         public static ServiceResult Fail(string message)
         {
             return new ServiceResult { Success = false, Message = message };
+        }
+
+        public static ServiceResult Fail(string message, int? statusCode, string detail = null)
+        {
+            return new ServiceResult { Success = false, Message = message, StatusCode = statusCode, Detail = detail };
         }
     }
 
@@ -37,6 +44,11 @@ namespace TaskManager.Web.Models
         public new static ServiceResult<T> Fail(string message)
         {
             return new ServiceResult<T> { Success = false, Message = message };
+        }
+
+        public static ServiceResult<T> Fail(string message, int? statusCode, string detail = null)
+        {
+            return new ServiceResult<T> { Success = false, Message = message, StatusCode = statusCode, Detail = detail };
         }
     }
 }
